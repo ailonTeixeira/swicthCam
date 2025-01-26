@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Monitoramento ESP32CAM</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <style>
+        .video-frame {
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+            margin-top: 20px;
+        }
+        .video-frame img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+        .toggle-switch {
+            margin: 20px 0;
+        }
+        .navbar-custom {
+            background-color: #343a40;
+        }
+        .navbar-custom .navbar-brand, .navbar-custom .nav-link {
+            color: #fff;
+        }
+        .navbar-custom .nav-link:hover {
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+        <a class="navbar-brand" href="#">Monitoramento de Movimento</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Alternar navegação">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <!-- Menu suspenso -->
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="menuDropdown" role="button" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Menu
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="menuDropdown">
+                        <a class="dropdown-item" href="http://10.42.0.65" target="_blank">Streaming ESP32CAM</a>
+                        <a class="dropdown-item" href="http://127.0.0.1:5000" target="_blank">Monitoramento Energético</a>
+                    </div>
+                </li>
+            </ul>
+            <!-- Botão de Logout alinhado à direita -->
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">Sair</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Video Frame -->
+        <div class="row justify-content-center">
+            <div class="col-md-8 video-frame">
+                <img src="{{ url_for('video_feed') }}" alt="Video Feed">
+            </div>
+        </div>
+        <!-- Toggle Switch -->
+        <div class="row justify-content-center toggle-switch">
+            <div class="col-md-8 text-center">
+                <label class="switch">
+                    <input type="checkbox" id="toggleSwitch" {% if control_state == 'ON' %}checked{% endif %}>
+                    <span class="slider round"></span>
+                </label>
+                <p>Saída Digital: <strong id="controlState">{{ control_state }}</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estilo para o toggle switch -->
+    <style>
+        /* Estilo do toggle switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input { 
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #28a745;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #28a745;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+    </style>
+
+    <!-- JavaScript -->
+    <!-- jQuery primeiro, depois Popper.js e Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <!-- Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <!-- Script para o toggle switch -->
+    <script>
+        $(document).ready(function(){
+            $('#toggleSwitch').change(function(){
+                var command = $(this).is(':checked') ? 'ON' : 'OFF';
+                $.post("{{ url_for('control') }}", {command: command}, function(data){
+                    $('#controlState').text(command);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
