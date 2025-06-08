@@ -7,6 +7,7 @@ Uma solução de automação que desliga aparelhos quando um ambiente está vazi
 
 ![alt text](https://img.shields.io/badge/tecnologia-Python%20%7C%20Flask%20%7C%20ESP32-blue)
 
+
 📖 Sumário
 
     O Problema Resolvido
@@ -20,12 +21,14 @@ Uma solução de automação que desliga aparelhos quando um ambiente está vazi
     ⚙️ O Ciclo Completo: Detecção, Ação e Medição
 
     🎯 Conclusão do Projeto
+    
 
 🎯 O Problema Resolvido
 
 O desperdício de energia com aparelhos ligados em salas vazias é um desafio comum. No entanto, além de simplesmente desligá-los, é crucial quantificar a economia gerada e validar que a automação está funcionando corretamente.
 
 Este projeto oferece uma solução completa que não só atua para economizar energia, mas também monitora o consumo elétrico para fornecer dados concretos sobre seu impacto, transformando uma ideia de automação em uma ferramenta de gestão energética.
+
 🏛️ Arquitetura de Ciclo Fechado
 
 O sistema é composto por múltiplos nós que trabalham em conjunto para criar um ciclo de controle e verificação:
@@ -54,6 +57,8 @@ O sistema é composto por múltiplos nós que trabalham em conjunto para criar u
 
         Responsabilidades: Exibir o feed de vídeo, permitir controle manual e, potencialmente, exibir os dados de consumo em tempo real.
 
+
+
 🚀 Funcionalidades Principais
 
     Economia de Energia Automatizada: Desliga aparelhos de forma inteligente com base na ausência de pessoas.
@@ -65,6 +70,7 @@ O sistema é composto por múltiplos nós que trabalham em conjunto para criar u
     Detecção de Presença por Visão Computacional: Usa OpenCV para analisar o vídeo e inferir a presença humana.
 
     Painel de Controle Centralizado: Oferece uma interface web com login para visualização e controle manual.
+
 
 🛠️ Componentes e Tecnologias
 Hardware
@@ -95,6 +101,7 @@ Software e Bibliotecas
 
         Arduino Core para ESP32, WiFi.h, esp_camera.h, EmonLib.h
 
+
 ⚙️ O Ciclo Completo: Detecção, Ação e Medição
 
     Detecção de Presença: O servidor Flask solicita imagens da ESP32-CAM e, usando OpenCV, analisa se o ambiente está ocupado ou vazio.
@@ -114,6 +121,9 @@ Software e Bibliotecas
         Isso permite que o sistema confirme que o comando "OFF" realmente zerou o consumo e quantifique os kWh economizados ao longo do tempo.
 
     Interface com o Usuário: O usuário pode monitorar o feed da câmera e anular a automação a qualquer momento através do painel web, que também pode ser expandido para exibir gráficos de consumo em tempo real.
+
+![diagramaElátricoSwitchCam](https://github.com/user-attachments/assets/94aa683e-a6fd-4b38-8673-03bd22f60609)
+    
 
 🎯 Conclusão do Projeto
 
