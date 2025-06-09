@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoramento de Consumo</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+        }
+        .info-box {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .info-box div {
+            background: #b6f0c5;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 255, 0, 1);
+            width: 48%;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .info-box div h2 {
+            margin: 0;
+        }
+        .btn {
+            display: inline-block;
+            margin: 10px 0;
+            padding: 10px 20px;
+            background-color: #00ff00;
+            color: black;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 class="my-4 text-center">Monitoramento de Consumo Energético em Tempo Real </h1>
+    <div class="row justify-content-center">
+    </div>
+    <div class="info-box">
+        <div>
+            <h2>�^zltima Potência</h2>
+            <p>{{ dados_totais.ultima_potencia }} W</p>
+            <p>{{ dados_totais.ultima_potencia_horario }}</p>
+        </div>
+        <div>
+            <h2>Consumo Total</h2>
+            <p>{{ dados_totais.total_consumo }} kWh</p>
+            <p>{{ dados_totais.inicio_consumo }} - {{ dados_totais.fim_consumo }}</p>
+        </div>
+        <div>
+            <h2>�^zltima Corrente</h2>
+            <p>{{ dados_totais.ultima_corrente }} A</p>
+            <p>{{ dados_totais.ultima_corrente_horario }}</p>
+        </div>
+        <div>
+            <h2>Custo Total</h2>
+            <p>R$ {{ dados_totais.custo_reais }}</p>
+        </div>
+    </div>
+
+    <canvas id="correnteChart" width="600" height="400"></canvas>
+    <canvas id="consumoChart" width="600" height="400"></canvas>
+
+    <script>
+        async function fetchData() {
+            const response = await fetch('/data');
+            const data = await response.json();
+
+            const ctxCorrente = document.getElementById('correnteChart').getContext('2d');
+            const ctxConsumo = document.getElementById('consumoChart').getContext('2d');
+
+            // Atualiza gráficos dinamicamente
+            new Chart(ctxCorrente, {
+                type: 'line',
+                data: {
+                    labels: data.labels.reverse(),
+                    datasets: [{
+                        label: 'Corrente (A)',
+                        data: data.corrente.reverse(),
+                        borderColor: 'rgba(0, 0, 255, 1)',
+                        borderWidth: 1,
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: { title: { display: true, text: 'Data/Hora' } },
+                        y: { title: { display: true, text: 'Corrente (A)' }, beginAtZero: true }
+                    }
+                }
+            });
+
+            new Chart(ctxConsumo, {
+                type: 'line',
+                data: {
+                    labels: data.labels.reverse(),
+                    datasets: [{
+                        label: 'Consumo (kWh/min)',
+                        data: data.consumo.reverse(),
+                        borderColor: 'rgba(255, 0, 0, 1)',
+                        borderWidth: 1,
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: { title: { display: true, text: 'Data/Hora' } },
+                        y: { title: { display: true, text: 'Consumo (kWh/min)' }, beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        fetchData();
+    </script>
+</body>
+</html>
+
